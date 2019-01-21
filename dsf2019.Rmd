@@ -1,0 +1,494 @@
+---
+title: 'Data Science Fundamentals (2019 Edition)'
+author: "Samuel Chan"
+date: 'Updated: January 20, 2019'
+output:
+  html_document:
+    highlight: kate
+    number_sections: yes
+    theme: readable
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: no
+  pdf_document:
+    fig_caption: yes
+    latex_engine: xelatex
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  fig_caption: yes
+---
+Before you go ahead and run the codes in this coursebook, it's often a good idea to go through some initial setup. Under the *Libraries and Setup* tab you'll see some code to initialize our workspace, and the libraries we'll be using for the projects. You may want to make sure that the libraries are installed beforehand by referring back to the packages listed here. Under the *Training Focus* tab we'll outline the syllabus, identify the key objectives and set up expectations for each module.
+
+# Background {.tabset}
+## Algoritma
+The following coursebook is produced by the team at [Algoritma](https://algorit.ma) for its Data Science Fundamentals Series workshops in Bangkok, January 2019. 
+
+The coursebook is intended for a restricted audience only, i.e. the individuals and organizations having received this coursebook directly from the training organization. It may not be reproduced, distributed, translated or adapted in any form outside these individuals and organizations without permission. 
+
+Algoritma is a data science education center based in Jakarta. We organize workshops and training programs to help working professionals and students gain mastery in various data science sub-fields: data visualization, machine learning, data modeling, statistical inference etc. 
+
+## Libraries and Setup
+We'll set-up caching for this notebook given how computationally expensive some of the code we will write can get.
+```{r setup}
+knitr::opts_chunk$set(cache=TRUE)
+options(scipen = 9999)
+rm(list=ls())
+```
+
+You will need to use `install.packages()` to install any packages that are not already downloaded onto your machine. You then load the package into your workspace using the `library()` function:
+```{r}
+
+```
+
+## Training Objectives
+The primary objective of this course is to provide a comprehensive introduction to the science of statistical programming, data visualization and machine learning in the most beginner-friendly way possible. Throughout the 3 days, we will take a learn-by-building approach to studying R, a language widely used in the field of data science and visualization. We will attempt some in-classroom quizzes, try out hands on building machine learning models, and understanding the nuanced art of visual storytelling with data. 
+
+The syllabus can be deconstructed into 3 big chapters, each consisting of multiple sub-chapters. The way the coursebook is composed place a huge amount of emphasis on **practicality** and **real-world workflows**. This often means we will accept the necessary trade-offs between theoretical elaboration and pedagogical considerations.
+
+- **Programming languages and Tools**
+- R Programming  
+- Workflow and Tools Setup  
+- Data Structures in R  
+- Statistical Tools  
+- R Scripts and R Markdown  
+
+- **Data Visualization**  
+- Plotting Basics  
+- Statistical Plots  
+- Demo: Introduction to `ggplot2`  
+
+- **Machine Learning**  
+- Correlation and Covariances  
+- Regression Models  
+- Regression Models / Case Study  
+
+# R Programming
+Since you'll spend a great deal of your time working with data in R and RStudio, I think it's important to get yourself very familiar with this IDE (integrated development environment). RStudio is the most popular integrated development for R and is a core tool for data science teams in AirBnB[^1], Uber[^2] etc., and is a tool we'll be using throughout the Academy workshops.
+
+If you're a seasoned programmer, the **Option + Shift + K** combination will bring up a shortcut reference guide that helps you use RStudio more effectively. 
+
+## Why learn R at all?
+1. **Built by statisticians, for statisticians.**  
+R is a statistical programming language created by Ross Ihaka and Robert Gentleman at the Department of Statistics, at the University of Auckland (New Zealand). R is created for the purpose of data analysis and as such, is different in nature from traditional programming languages. R is not just a statistical programming language, it is a complete environment for data scientist and the most widely used data analysis software today[^3]. 
+
+2. **Libraries.**  
+R's libraries extend R's graphical abilities, and adds out-of-the-box functionalities for linear and non-linear modeling, statistical tests (confidence tests, P-value, t-test etc), time-series analysis, and various machine learning tasks such as regression algorithms, classification algorithms, and clustering algorithms. The R community is noted for its active contributions in terms of packages and 
+
+3. **Open Source.** 
+Part of the reason for its active and rapidly growing community is the open-source nature of R. Users can contribute packages -- many of which packaged some of the most advanced statistical tools that are not found in other commercial, proprietary statistical computing softwares. 
+
+4. **Used by the biggest software companies in the world.**  
+R is used by Google to calculate ROI on advertising campaigns and estimate causal effect (say, estimate the impact of an app feature on app downloads or number of additional sales from an AdWords campaign); In fact, it even released its own R packages to allow other R users to do similar analysis using the same tool[^4]. Data Science employees at Google participate in User Groups to discuss how R is used in Google (answer: it's used very widely in a production environment at Google and Google integrates R with many of their own technologies), publishing [its own R client for the Google Prediction API](https://code.google.com/archive/p/google-prediction-api-r-client/), [Google's R style guide](http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html), and its developers have released a number of R packages over the years. 
+Microsoft first uses R for Azure capacity planning, Xbox's TrueSkill Matchmaking System, player churn analysis, in-game purchase optimization, fraud detection, and other internal services across Microsoft's line of products[^5], and then went on to acquire Revolution Analytics, whom products were then rebranded and renewed by Microsoft and now known as Microsoft R Server, Microsoft R Open, Microsoft Data Science Virtual Machine etc. 
+
+5. **Ready for big data**  
+RHadoop, ParallelR, Revolution R Enterprise and a handful of other toolkits adds powerful big data support, allowing data engineers to create custom parallel and distributed algorithms to handle parallel / map-reduce programming in R. This makes R a popular choice for big data analsis and high performance, enterprise-level analytics platform.
+
+6. **Employability!**  
+R is a required skill for data science roles across all top Indonesian's startups: GoJek, Traveloka, Uber, Tiket.com, SaleStock, Twitter, HappyFresh etc. Do a quick search on job portals (Tech In Asia's Jobs, JobStreet etc) and you'll see R is a highly sought-after language skill.
+
+The style guide from Google is the one we'll adhere to - if this is the first time you're writing R code, I recommend you adopt these "best practices" as a certain level of "strictness" can make you a more disciplined and methodical programmer in the long run.  
+
+## R Programming Basics
+It pays to get yourself familiar with R and RStudio, the IDE (interactive development environment). In our workshop, we'll discuss in more details the various functionalities of RStudio's interface, and if this is the first time you're working in a code environment, it pays to get yourself familiar with this IDE as you'll be working with it a lot!
+
+To get started, let's write our first R code by typing `getwd()` into the Console (bottom of the screen), or by running in from within a Chunk (look for the green "run" button):
+```{r}
+# This is a comment
+getwd()
+# setwd(...)
+```
+Notice the "#" character in the first and third line of the code chunk, indicating to R that it's a comment and should be ignored. `setwd()` was ignored because it's on the same line and to the right of the "#" character. As you may have expected, `setwd()` is used to change our working directory by setting a new one. 
+
+R is **case-sensitive** so "Algoritma" and "algoritma" are different symbols and will point to different variables.
+```{r}
+activity <- "Programming"
+activity == "programming"
+print(paste(activity, "is one of the most therapeutic activity."))
+
+# Object 'Activity' don't exist!
+# print(Activity) will not work
+```
+
+### Vectors
+Speaking of objects, R objects can take on one of five classes:  
+- character    
+- numeric   
+- integer  
+- complex  
+- logical  
+
+The most basic form of an R object is a vector. As a rule, a vector can only contain objects of the same class:
+```{r}
+vector1 <- c("learning", "data", "science", "in", 2019)
+class(vector1)
+
+vector2 <- c(1, FALSE, FALSE, 0)
+class(vector2)
+```
+Also observe how we use the `c()` function to concatenate objects together to form a vector.
+
+`vector1` is now an object in our global environment, but if you're paying attention, you'll notice that it is a **character vector**. While 2018 itself is a numeric, because of the "same-class" rule we learn above, 2018 was coerced into a character so that the resulting vector is valid. 2018 (the numeric) is "2018" (character) as a result:
+```{r}
+vector1
+```
+
+Similarly, in `vector2`, `1` is a numeric, and `FALSE` is a logical, and therefore the `FALSE` values are coerced into a numeric. Go ahead and print out `vector2` as a confirmation:
+```{r}
+# your code here:
+
+```
+
+**Dive Deeper:**  
+Create a vector and name it `customers`. Store 4 names in the vector and make sure it is a `character` vector. Create another vector and name it `age`, store 4 numeric in the vector and make sure it is a `numeric` vector. 
+```{r}
+# Your code here:
+
+```
+
+2. Use `class()` and `length()` in the code chunk below to verify that you have done the exercise above correctly:
+
+```{r}
+# Your code here:
+
+```
+
+3. Create another vector and name it `suppliers`. Store 3 names in it:
+```{r}
+# Your code here
+
+```
+
+4. Join the `customers` and `suppliers` vector into one vector using the concatenate technique you've learned, which is `c()`.
+```{r}
+# Your code here:
+
+```
+
+If you've managed to exeucte the above exercises in the dive deeper section: congratulations! Throughout the course you'll do a number of these exercises, and they are useful revision tools that you should take advantage of to test your knowledge and make sure you have a full grasp of the topics being assessed.
+
+You've seen how numeric and character classes and even made a few vectors of your own above! But R has other object types and we'll take a look at them:
+
+```{r}
+# character
+tempo <- c("Algoritma", "Thailand", "e-Commerce", "Bangkok")
+# numeric
+tempo <- c(-1, 1, 2, 3/4, 0.5)
+# integer
+tempo <- c(1L, 2L)
+# integer
+tempo <- 5:8
+# logical
+tempo <- c(TRUE, TRUE, FALSE)
+```
+
+A quick note on integers: they cannot take decimal or fractional values, while numerics can. Numerics act more like the "float" or "double" types supported by many other programming languages. 
+
+### Factors and Lists
+Another important concept in R is factors - many statistical modeling techniques and prediction algorithms treat factors specially either as a target outcome (in machine learning language) or dependent variable (in statistics) while many other modeling techniques treat factors specially when they're used as independent variables. Factors is useful in representing categorical variables whether or not they are unordered (cash, credit, transfer) or ordered (high volume, normal volume, low volume):
+```{r}
+categories <- factor(c("OfficeSupplies", "Computers", "Packaging", "Machinery", "Building"))
+categories # levels are sorted alphabetically unless through the levels argument
+```
+
+There is a type of R object that is exempted from the rule we repeatedly mention above, and it's the **List**. If we have to store multiple values that have multiple classes between them, then storing them as a list is the appropriate choice. 
+
+### Data Frames
+Data frames can be thought of as a special case of lists where every element of the list has to have the same length. Each element of the list can be thought of as a column in the data frame. In practice, a large proportion of our data is tabular: when we import data from a relational database (MySQL, Postgre) or from a spreadsheet software (Google Sheets, Microsoft Excel) we can represent these data as a Data Frame object.
+
+Given its importance, let's dive deeper into Data Frames by actually working from a few real datasets in the following section.
+
+# Exporatory Data Analysis 
+The first dataset is stored in the `csv` format, and is sampled from an e-commerce company across a specified period. Each row (observation) is a transaction of copiers (photocopy machines) with details such as the shipping date, order date, shipping mode etc. 
+
+In the following code, we use `read.csv()` to read the file into our environment and then use `head()` to inspect the first 6 rows of the data. 
+```{r}
+copiers <- read.csv("data_input/copiers.csv")
+head(copiers)
+```
+
+In exploratory data analysis, our objective is often to surface interesting insights using a combination of visualization and probing techniques. Before we move into visualization, we'll quickly investigate the structure of our data. We can do so using R's `str()` function:
+```{r}
+str(copiers)
+```
+
+Notice the `$` (dollar sign): That's how we "access" the variable of interest in that dataframe. We can, for example look at the first 10 rows of the `Segment` variable:
+```{r}
+head(copiers$Segment, 10)
+```
+
+Run through the output from `str()` above, and answer the following questions:
+1. How many rows of data do we have in our `copiers` dataset?  
+2. How many variables do we have in our `copiers` dataset?  
+3. Are the variables in the right classes?  
+4. Are there any missing values in our dataset?  
+5. Formulate a mental checklist of pre-processing steps required for the dataset above. 
+
+
+## Pre-processing and Data Preparation  
+Cleaning our data is an essential step in every machine learning or data visualization projects. As you get more familiar with R programming, these exercises become more routinous; 
+
+The `Product.Name` variable is currently a factor, even though a `character` class is probably more appropriate. The `Order.Date` variable  is currently a factor, even though we want it to be a `Date` object. To perform these explicit coercion, we can use the `as.___` syntax. A few examples:  
+- `as.character()`  
+- `as.Date()`  
+- `as.numeric()`  
+- `as.integer()`  
+
+Consider the following example where we use `as.character()` and `as.Date()` to transform some of the variables into our desired classes. Compare the output of this `str()` to the earlier output and notice the differences. 
+```{r}
+copiers <- read.csv("data_input/copiers.csv")
+copiers$Order.ID <- as.character(copiers$Order.ID)
+copiers$Product.Name <- as.character(copiers$Product.Name)
+copiers$Order.Date <- as.Date(copiers$Order.Date, format="%m/%d/%y")
+str(copiers)
+```
+
+Are there any other transformations necessary in our dataframe earlier? If so: go ahead and add your explicit coercion code above and re-run the code chunk.
+
+## Data Visualization
+Let's learn the basis of data visualization. Let's start from a simple but common plot type: the scatterplot. When we pass in two numeric columns as `x` and `y` values, `plot()` will create a scatterplot:
+```{r}
+plot(x=copiers$Sales, y=copiers$Profit)
+```
+
+Another common plot is the boxplot. When `x` is a factor and `y` is a numeric columnn, `plot()` creates a boxplot: 
+```{r}
+plot(x=copiers$Ship.Mode, y=copiers$Sales)
+```
+
+`plot()` also takes additional parameters, such as the `type` parameter. In the following code, we override the plot type to generate a line plot (`type="l"`).
+```{r}
+plot(copiers$Profit, type="l")
+```
+
+Other commonly used parameters include `col` (color), `pch` (point character), `cex` (character expansion / size), `main` (main title). `sub` (sub title), `xlab` / `ylab` (labels for x and y axis). 
+
+Go ahead and customize the following plot using some of the parameters above. Change the values up to see how they take effect. 
+
+```{r}
+plot(x=copiers$Sales, 
+     y=copiers$Profit, 
+     col=copiers$Segment,
+     pch=19)
+
+legend("bottomright", legend=levels(copiers$Segment), fill=1:3)
+```
+
+## In-classroom Practice: EDA Techniques
+Moving into a more quantitative mode of analysis, the following section you will follow the lead of your Lead Instructor to perform a series of quantitative EDA process to build up a better sense of your data. 
+
+Specifically, you want to be familiar with the process of answering business questions using statistical techniaues, visualization techniques, and writing exploratory code that make use of:
+
+- Subsetting  
+- `summary()`  
+- `table()`  
+- `xtabs()`  
+- `aggregate()`  
+
+```{r}
+# Practice with code here
+
+
+
+```
+
+## Take-home Assignment
+The following data is a sample of 985 real estate transactions in the Sacramento area reported over a five-day period[^6]. 
+
+```{r}
+realestate <- read.csv("data_input/realestate.csv")
+head(realestate)
+```
+
+1. Do a series of pre-processing to see if the data contain any missing values, outliers, or anything worth paying special attention to. 
+
+2. Create a scatterplot using the `sq__ft` and `price` variables. As a convention, the `x` axis should be the independent variable and `y` should be the dependent variable. Add a main title to your plot. 
+
+3. Create a boxplot using `type` and `price` variables. Add a main title to your plot. 
+
+4. Removing any rows with incomplete information from earlier steps, what is the relationship between number of bedrooms, type of real estate, and price?
+
+5. Removing any rows with incomplete information from earlier steps, does the price deviate more greatly between one type of real estate compared to the other? You may use `sd()` for standard deviation to answer this question.
+
+# Machine Learning
+Machine learning on a very basic level, refers to a subfield of computer science that "gives computer the ability to learn without being explicitly programmed". Less-sensationally, it is concerned with the theory and application of statistical and mathematical methods to arrive at a particular objective without following a set of strictly defined and rigid pre-determined rules. 
+
+When the prediction value is numerical (think oil prices, rainfall, quarterly sales, debt collection rate etc), it is generally referred to as a "regression" problem. This is in contrast with "classification" problems, a general term for when the value we're trying to predict is categorical (loan defaults, email spam collection, handwriting recognition etc). 
+
+It is important here to remind you that regression models are not just used in the machine learning context for numeric prediction. Regression, in fact, represent the "workhorse of data science"[^7] and is among the most practical and theoretically understood models in statistics. Data scientists well trained with this foundation will be able "to solve an incredible array of problems"[^8]. Because regression models often lead to highly interpretable models, we can (and should) consider them as a handy statistical tool that has its place in some of the most common data science tasks:  
+
+- **Prediction**: Predict the profitability of a new product category given its pilot launch sales figure  
+- **Statistical Modeling**: Determining a quantitative relationship between price sensitivity and average sales unit  
+- **Covariation**: Determining the (residual) variation in average sales unit that appears unrelated to price levels; and to investigate the impact of other external factors beyond price points in explaining the fluctuation of average sales unit  
+
+## Regression Models
+
+Going back to the photocopiers dataset we work on earlier: let's put ourselves in the shoes of a data scientist working at the company; the division head wants to develop a simple model to predict profitability of a transaction given the sales amount. As it stands, the company has employed analysts to perform end-of-day calculations on the profit of each sales transaction using sales, discounts and costs information from the Point-Of-Sale records.
+
+If we are able to predict the profitability of our items sold on the basis of transaction price alone, then we could realistically perform profit forecast (since price is a known quantity as compared to discounts and costs), as well as saving tons of manual work.
+
+In the case of a simple linear regression, we want to first ensure that a linear model would indeed be a reasonable choice in describing the relationship between our predictor, `Sales` and our target outcome, `Profit`. 
+We can see a fairly linear relationship between the Sales and Profit variables of our `copiers` dataset: this supports the objective of a simple linear regression, which is concerned with modeling that relationship with a straight line. 
+
+```{r}
+plot(copiers$Sales, copiers$Profit)
+```
+
+## Simple Linear Regression
+Create a linear model in R is very convenient and easy. We will call the `lm()` function and specify two parameters: the `formula` for our linear model and the `data` from which our model is built from. 
+
+```{r}
+estimator <- lm(formula = Profit~Sales, data=copiers)
+```
+
+We named our model `estimator`; It now contains attributes that we can use, and to access them we use the familiar `$` notation as well:
+
+Notice that we've saved `ols` as a linear model and we can now use the attributes of `ols`, such as its `$coefficients` to create our linear model: 
+```{r}
+estimator$coefficients
+```
+
+
+And with that let's create our plot again, but this time we'll also add a line that intercepts the y-axis at -114.0625136 and have a slope of 0.4228588 degree, just as the coefficients of our model:
+
+```{r}
+plot(x=copiers$Sales, y=copiers$Profit)
+# abline(-114.0625136, 0.4228588)
+abline(estimator$coefficients[1],estimator$coefficients[2])
+```
+
+That line, it turns out, is the line of best fit for our observations. This fitted line is estimated with error because the points are not perfectly predicted by the line (even though they hover around the line), and our linear model `ols` have estimated this line to minimize the least squares error. 
+
+When I said "estimating a line", I hope it occurs to you that we're in fact estimating **two parameters**: the point at which our line cross the y-axis (known as the "intercept" term) and the slope degree (known as the "slope"). Collectively they're also referred to as **coefficients** (or "beta coefficients"), but really you should know they mean the same thing. For most machine learning models we created in R, we can use generic functions such as `summary()` and `predict()` to obtain more information about the model, or on new values, respectively. Let's try and apply `summary()` on the model we just created:
+```{r}
+summary(estimator)
+```
+
+From the output of the `summary()` call, we see the two coefficients that represent our regression line. The point at which our line crosses the y-intercept is -114.06251  and the slope is 0.42286. The coefficient of the slope is estimated so as to minimize the vertical distance between the observed points (truth) and the prediction. Because predictions are rarely perfect, the distance between each of these points and are captured in an attribute named `residuals`. Hence, to get the five number summary of the `residuals`, we would call `fivenum(ols$residuals)` or equivalently `summary(ols$residuals)`. 
+```{r}
+summary(estimator$residuals)
+```
+
+The standard error that was printed from the `summary()` function is an estimate of the standard deviation of the coefficient, which, recall, is an indication of how much our estimate varies across samples (due to random sampling). The t-value we obtain from the summary is just the coefficient divided by the standard error:
+```{r}
+summary(estimator)[[4]]
+-114.0625136/32.62742800
+```
+
+The last column of the summary section give us a probability of obtaining a t-value as extreme as what we just observed. It could have been obtained from `2*pt(-2.544887, n)` where `n` is the number of samples. From the earlier `summary()` call we also see significance codes denoted with `***`, `**`, `.` etc. That is just a visual representation of the p-value (`Pr(>|t|)`), so a p-value that is lesser than 0.001 is denoted with `***`, and a p-value between 0.01 and 0.05 is denoted with `*`, and so on and so forth. 
+
+The reason why we're concerned with these statistics is that in the regression modeling, we're trying to investigate if there's sufficient evidence that our independent variables (or "predictor variables") are different from 0. That is to say, we like to know if variables like Sales, Branch ID, Time of Day have any real effect on the profitability of our Profit, or if variables such as humidity level, temperature, or duration of outdoor exposure has any real effect on machinery corrosion level. Through a regression model, we want to see if these variables are genuinely affecting the target variable ("profit") or that any apparent differences in profit are just due to random chance and sampling; The null hypothesis, recall, is that the reason we observe a difference in profitability across stores for example, is ultimately due to random chance from sampling - if we have sampled a different number of months, we would have observed a completely or even contradictory scenario! Recall from our practical statistics class that the rule of thumb to reject the null hypothesis (no effect) and favor the alternative hypothesis is 0.05. That is, if the chance of us observing a profit distribution such as these provided that they are in fact independent from store branches is only 5%, then we'd reject the null hypothesis.
+
+If you need an in-depth presentation of the statistical concepts, you'll find them in the Practical Statistics course that Algoritma offers in its Data Science Academy program. For pedagogical reasons and in respect of the physical contraints in this workshop we will not dive deeper into the details of these mathematical concepts. If you'd like a more academic treatment of the subject, I can recommend the free PDF copy of The Elements of Statistical Learning: Data Mining, Inference, and Prediction - download link in annotation[^9].
+
+```{r}
+summary(estimator)[[4]]
+```
+
+Now that we have the coefficients, what does that tell us? Well the size of the coefficients tell us the effect that variable has on our target variable. We observed here that Sales have a coefficient of ~0.42 on Profit, and because 0.42 is a positive number we know that the effect is positive: the higher the Sales, the higher the Profit. A negative coefficient will indicate the oppositive, and an example of that would be Profit vs Market Saturation: the increasingly saturated market leads to decreasing profit. 
+
+Can you think of another example where we might observe a negative coefficient in a regression model?
+
+In addition to the above information, we've also derived the profit equation from our linear model directly. It takes the form:  
+$\hat{Y} = \beta_0+\beta_1X_1$ 
+
+Which in plain English means:
+Estimated Profit = Intercept + Slope * Sales
+
+Substituting the beta coefficients into the formula hence yield:
+Estimated Profit = -114.0625136 + 0.4228588 * Sales
+
+That tells us that the profit is expected to increase by \$0.4228588 when the sales price of our Copiers machine increase by \$1, and decrease by \$0.4228588 as the sales price of our Copiers machine decrease by \$1. For a Copiers machine with a listed price of \$0, the profit is predicted to be negative (incurring a loss of approximately $-114.0625136).
+
+
+## Linear Model Prediction
+Earlier we learned to estimate our profit from sales amount using the coefficients we obtained from the model. As a reminder, let's call `summary()` on our linear model again:
+```{r}
+summary(estimator)
+```
+
+Substituting the beta coefficients into the formula hence yield:
+Estimated Profit = -114.06251 + 0.42286 * Sales
+
+Supposed we're expecting a sales transaction by the end of day amounting \$3,000. What would our linear model predict its profit to be?
+
+```{r}
+-114.06251 + 0.42286 * 3000
+```
+
+Estimated Profit 
+= -114.06251 + 0.42286 * 2950
+= 1154.517
+
+It turns out that our linear model would predict a profit of $1154.517. Not too bad! However, R has built-in functions such as `predict()` that allow us to obtain predictions given some input data. `predict` expects a machine learning model as its first parameter, and in this case a data frame to predict on. We already have the model object ("estimator") so let's create the new data for us to work with. 
+
+```{r}
+# assuming we want to estimagte the profit on 4 different transactions, at varying level of price point
+transaction_today <- data.frame(Sales=c(1000,500,700,3000))
+```
+
+And with that we can apply the `predict()` function rather easily:
+```{r}
+predict(estimator,transaction_today)
+```
+
+The result is exactly the same as what we obtained manually (by hand). Let's now talk about another important concept of a regression model: the R-squared.
+
+## R-squared
+R squared by definition is the percentage of the total variability that is explained by the linear relationship with the predictor (Regression V / Total V):  
+$R^2 = 1 - \frac{\sum\limits_{i=1}^n (\hat{Y_i} - \bar{Y})^2}{\sum\limits_{i=1}^n(Y_i - \bar{Y})^2}$  
+
+In other words, R squared can be thought of as a quantity that represents the % of the total variation that's represented by the model. We simply take the regression variation and divide it by the total variation. In our case, it is the % of the variation in profit *that is explained by the regression relationship with sales*. Some facts about $R^2$:  
+- $R^2$ is the percentage of variation explained by the regression model  
+- $0 \leq R^2 \leq 1$  
+- If we define R as the sample correlation between the predictor and the outcome, $R^2$ is simply the sample correlation squared   
+
+Because R-squared is a statistical measure of how close the data are to the fitted line, we want our model to achieve a high R-squared as it means our model has fit the data well (not always the case, but we'll get to that later). 
+
+When we use `summary()` on our least squares regression model, its output include the r-squared (in some statistical software / machine learning domains this is also called the coefficient of determination). We can find the R-squared directly from the summary:
+```{r}
+estimator <- lm(Profit ~ Sales, copiers)
+summary(estimator)$r.squared
+```
+
+Now let's try and manually arrive at the R-squared value, just as we did with the coefficients of the slope and intercept. Plucking our example into the formula specified above:
+```{r}
+predict <- predict(estimator)
+actual <- copiers$Profit
+r2 <- 1 - ( sum((actual-predict)^2)/sum((actual-mean(actual))^2) )
+r2
+```
+
+You can see from our manual calculations above that R squared really is a ratio and ranges from 0 to 1. This is observed from the third line of the code. Specifically, it is a ratio that describes the amount of error explained by two different models. 
+
+Because of how common the `sum((actual-predict)^2)` calculation is, we gave it a name: **sum of squared errors**, which is literal and memorable. R's `resid` function allows us to compute the difference between the predicted and actual values:
+```{r}
+sum((actual-predict)^2)
+sum(resid(estimator)^2)
+```
+
+## Take-home Assignment
+As extra practice, consider your `estimator` model again and run through the following list:
+
+1. How could we improve the performance of `estimator` further?  
+2. What happen if we have more than one predictor?  
+3. When is a linear model _not appropriate_?
+
+
+# Closing Words
+As the first part of this Data Science Fundamentals series come to a close, let me commend you on the great courage and dedication. I hope the experience has been educational to say the least, and that you've added some very valuable skills to your data science toolset. Data visualization and machine learning are both vast fields to cover, so we've only scratched the surface ofwhat is possible. The next time we meet again, we will move from the e-commerce dataset into finance: how banks and financial institutions use data science to solve an array of issues: fraud detection, identifying non-performing loans, cash withdrawal forecasts, credit scoring etc.  
+
+See you soon, and happy programming!
+
+# Annotations
+[^1]: [How R Helps AirBnB make the most of its data](https://peerj.com/preprints/3182.pdf)
+[^2]: [Uber Engineering's Tech Stack: The Foundation](https://eng.uber.com/tech-stack-part-one/)
+[^3]: [Microsoft R Open: The Enhanced R Distribution](http://mran.revolutionanalytics.com/rro/)
+[^4]: [CausalImpact: A new open-source package for estimating causal effects in time series](https://opensource.googleblog.com/2014/09/causalimpact-new-open-source-package.html)
+[^5]: [R at Microsoft](http://blog.revolutionanalytics.com/2015/06/r-at-microsoft.html)
+[^6]: [The Scramento Bee](http://www.sacbee.com/)
+[^7]: L.Massaron, A.Boschetti, Regression Analysis with Python
+[^8]: B.Caffo, Regression Models for Data Science in R
+[^9]: T. Hastie, R. Tibshirani, J. Friedman, [The Elements of Statistical Learning: Data Mining, Inference, and Prediction](https://web.stanford.edu/~hastie/ElemStatLearn/download.html)
