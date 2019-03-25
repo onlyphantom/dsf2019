@@ -1,0 +1,69 @@
+---
+title: "Data Science Fundamentals: Exercise"
+author: "Samuel Chan"
+date: "3/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+insurance <- read.csv("data_input/FL_insurance_sample.csv")
+str(insurance)
+```
+
+The sample insurance file contains 36,634 records in Florida for 2012 from a sample company that implemented an agressive growth plan in 2012. There are total insured value (TIV) columns containing TIV from 2011 and 2012, so this dataset is great for testing out the comparison feature. This file has address information that you can choose to geocode, or you can use the existing latitude/longitude in the file.
+
+
+```{r}
+library(maps)
+fl_fips <- county.fips[grep(x=county.fips$polyname, pattern="florida"), ]
+fl_fips$polyname <- gsub("[[:alnum:]]+[,]", "", fl_fips$polyname)
+head(fl_fips)
+```
+
+
+```{r}
+counties_name <- tolower(gsub(pattern=" COUNTY", replacement = "", x = insurance$county, fixed = TRUE))
+counties_name <- gsub(pattern="\\s+(?=[[:alnum:]])", " ", counties_name, perl = TRUE)
+counties_name <- data.frame("counties_name" = counties_name)
+counties_name$fips <- fl_fips[match(counties_name$counties_name, fl_fips$polyname),"fips"] 
+head(counties_name)
+```
+
+
+```{r}
+dat <- data.frame(
+  "fips" = counties_name$fips,
+  "y2012" = insurance$tiv_2012,
+  "y2011" = insurance$tiv_2011
+) %>% 
+  group_by(fips) %>% 
+  summarize_all(mean) 
+
+head(dat)
+```
+
+
+```{r}
+library(usmap)
+library(ggplot2)
+plot_usmap(data=dat, regions = "state", include="FL", values="y2011") + 
+  scale_fill_gradient2(low='white', high='purple', name="Total insured value")
+```
+
+
+## In-classroom Exercise
+1. Are there any data cleansing required? 
+  - Also: check for redundant features. Are both `line` and `construction` required for example?
+
+2. Plot the relationship between TIV 2011 and TIV 2012? Do you think the insured value from the previous year could be a good indicator of insured value for the following year?
+
+3. Use any exporatory techniques (for example: table, aggregate, xtabs, plot, ggplot) for the following questions?
+  - 3a. Which county has the largest total insured value in 2012?
+  - 3b. Which county has the greatest increase in total insured value from 2011 to 2012?
+  - 3c. What features are highly correlated with our target (`tiv_2012`)? Knowing how to perform feature selection and extraction is  **critical part** of any machine learning projects 
+  
