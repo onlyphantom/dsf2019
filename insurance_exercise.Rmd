@@ -36,6 +36,7 @@ head(counties_name)
 
 
 ```{r}
+library(dplyr)
 dat <- data.frame(
   "fips" = counties_name$fips,
   "y2012" = insurance$tiv_2012,
@@ -52,7 +53,51 @@ head(dat)
 library(usmap)
 library(ggplot2)
 plot_usmap(data=dat, regions = "state", include="FL", values="y2011") + 
-  scale_fill_gradient2(low='white', high='purple', name="Total insured value")
+  scale_fill_gradient2(low='white', high='cadetblue', name="Total insured value") +
+  labs(title="Total Insured Value by counties in Florida")
+```
+
+## Day 2: Catastrophe insurance
+- Learn about catastrophe insurance
+- Learning about subsetting
+- Is there a more powerful way to generate cross-tables than table
+- Learn about aggregating / summarizing data
+- Introduction to machine learning
+
+Total insured value is a term used to explain the total amount of insurance available in a single loss on a commercial property policy.  Total insured value is typically calculated by adding the property value, business interruption value and the value of any/all other property at the location. 
+
+In simpler words: TIV describes the value of the building or the policy limit, whichever is smaller. 
+
+A "natural disaster" insurance policy:
+- Earthquake
+- Hurricane
+- Flood
+- Fire
+
+Q: Why not roll it into regular property insurance?
+A: In the event of a hurricane hit or a massive flooding, all policyholders in a neighborhood will make a claim against the property insurance company - in fact it's nearly impossible to even determine the potential loss in such an event ahead of time. Unlike property damages covered in normal property insurance, catastrophic events are rarely isolated. 
+
+Property insurance companies cannot afford the risk exposure as these could bankrupt them. They could increase the premium but they then wouldn't be competitive compared to other property insurance companies. Case in point: Florida, for instance, requires insurance companies to pay into a pool of reserve cash that is dedicated to protecting the policyholders of carriers unable to pay claims due to insolvency.
+
+Consider Hurricane Andrew (1992) which resulted in USD 15 billion (adjusted for inflation, US$25 billion) in insurance claims, leading to the insolvency of 12 companies including:
+- Regency Insurance Company  
+- Great Republic Insurance Company
+- Ocean Casualty Insurance Company
+
+Read more: https://www.iii.org/article/spotlight-on-catastrophes-insurance-issues
+
+Subset the first 10 rows of data, and columns 4 to 9:
+```{r}
+insurance[1:10,4:9]
+```
+
+```{r}
+rowMax <- function(data) apply(data, 1, max, na.rm = TRUE)
+rowMax(insurance[1:10,4:7])
+```
+
+```{r}
+insurance[insurance$tiv_2011 > rowMax(insurance[,4:7]), 4:9]
 ```
 
 
