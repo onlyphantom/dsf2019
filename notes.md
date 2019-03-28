@@ -1,3 +1,5 @@
+## Data Analysis and EDA
+
 1. Read our dataset in
   - `read.csv("~/Desktop/Datasets/bankloans.csv")`
     - This will transform any character to a factor by default
@@ -53,6 +55,41 @@
 
 10. Aggregate
     - Basic construct: `aggregate(formula=y ~ x1 + x2 + x3, data, FUN=mean)`
+
+## Machine Learning
+### Regression Models
+1. Read our dataset in
+  - `risk <- read.csv("insurance_risk.csv")`
+
+2. Decide on the ML problem at hand
+  - Regression or Classification
+  - Which is your target variable?
+
+3. Decide on the predictors
+  - Predictors are the variables you use to make prediction
+  - `cor()` is correlation
+    - Correlation does not imply causation?
+    - Also doesn't tell you about direction
+  - You may need to use a lot of EDA techniques 
+
+4. Create our linear model
+  - `insurance_mod <- lm(risk~claims, insurance)`: linear model if a LINEAR relationship exist
+  - `summary(insurance_mod)`
+  - Could be useful to take a look at your residuals: `resid(insurance_mod)`
+  - To get only the coefficients: `coef(insurance_mod)`
+
+5. To predict using our model
+  - `predict(insurance_mod, data)`
+
+6. Final job:
+  - Your job ends when you have proof that your model cannot be further improved upon
+  - Good step is to always check your errors
+    - `hist(resid(model))`
+    - `plot(predict(model), resid(model))`
+    - Residuals should be normally distributed 
+    - Residuals should appear random
+
+
 
 # Extra Materials
 ## Data Visualization
