@@ -1,7 +1,11 @@
 # Data Science Fundamentals (2019 Edition)
 ## Overview
 
-The following coursebook is produced by the team at [Algoritma](https://algorit.ma) for its Data Science Fundamentals Series workshops in Bangkok, January 2019. 
+The following coursebook is produced by the team at [Algoritma](https://algorit.ma) for its Data Science Fundamentals Series workshops in:
+  - Bangkok, January 2019
+  - Singapore, July 2019
+  - Jakarta, November 2019
+    - Participants in Jakarta can use the `jakarta` branch instead for the content and materials
 
 ## Syllabus
 - **Programming languages and Tools**
