@@ -3,6 +3,9 @@ title: 'Data Science Fundamentals (2019 Edition)'
 author: "Samuel Chan"
 date: 'Updated: January 20, 2019'
 output:
+  pdf_document:
+    fig_caption: yes
+    latex_engine: xelatex
   html_document:
     highlight: kate
     number_sections: yes
@@ -11,9 +14,6 @@ output:
     toc_depth: 2
     toc_float:
       collapsed: no
-  pdf_document:
-    fig_caption: yes
-    latex_engine: xelatex
   word_document:
     toc: yes
     toc_depth: '2'
@@ -92,6 +92,183 @@ R is a required skill for data science roles across all top Indonesian's startup
 The style guide from Google is the one we'll adhere to - if this is the first time you're writing R code, I recommend you adopt these "best practices" as a certain level of "strictness" can make you a more disciplined and methodical programmer in the long run.  
 
 ## R Programming Basics
+
+Classes:
+  - Character (String)
+  - Numeric (any number)
+    - Integer (no decimal)
+  - Logical (Boolean)
+  
+
+```{r}
+attendance <- c(TRUE, T, FALSE, TRUE, 1, FALSE)
+
+class(attendance)
+print(attendance)
+```
+
+```{r}
+as.logical(c(TRUE, T, FALSE, TRUE, 1, FALSE))
+```
+
+```{r}
+attendance <- c(1, TRUE, 1, "TRUE")
+print(attendance)
+```
+
+
+```{r}
+copiers <- read.csv("data_input/copiers.csv")
+head(copiers, 3)
+```
+
+```{r}
+x <- 3
+
+# if its jakarta data, move timezone by 1
+# x <- x + 1
+
+print(x)
+```
+
+
+```{r}
+# str = structure
+str(copiers) 
+```
+
+Summary walks through each column, if the column is:
+  - Categorical: Tabulate the column's value
+  - Numeric: Produce the 5-number summary (min, max, 1st, 3rd, median) and mean
+  
+
+```{r}
+summary(copiers)
+```
+
+What is the number of transactions on Same Day shipping?
+```{r}
+summary(copiers$Ship.Mode)
+table(copiers$Ship.Mode)
+```
+
+Answer: 5
+
+What is the median Sales amount in our dataset?
+```{r}
+median(copiers$Sales)
+```
+
+```{r eval=FALSE}
+copiers <- read.csv("data_input/copiers.csv",
+                    header=TRUE, 
+                    sep=",", 
+                    stringsAsFactors = TRUE)
+```
+
+How many items did we ship on Standard Class to Corporate customers?
+Answer: 9
+```{r}
+table1 <- table("Shipment Mode"=copiers$Ship.Mode, "Customer"=copiers$Segment)
+table1
+```
+
+How many items did we ship on Standard Class to Corporate customers? What percentage is that relative to all our sales?
+
+```{r}
+prop.table(table1) * 100
+```
+
+```{r}
+summary(copiers$Segment)
+```
+
+Get me row 6, 8, 9, 10, column "Order.ID", "Quantity", "Profit"
+```{r}
+copiers[c(6,8:10), c("Order.ID", "Quantity", "Profit")]
+```
+
+```{r}
+mean(copiers[,"Sales"])
+```
+
+```{r}
+mean(copiers$Sales)
+```
+
+```{r}
+copiers[copiers$Profit > 1000, c("Sales", "Profit", "Order.ID")]
+```
+
+```{r}
+corporate <- copiers[copiers$Segment == "Corporate", ]
+mean(corporate$Profit)
+```
+
+```{r}
+corporate <- copiers[copiers$Segment == "Consumer", ]
+mean(corporate$Profit)
+```
+
+What is the profit in 2017 January to June?
+
+```{r}
+colnames(copiers)
+```
+
+```{r}
+today <- "98/20/11"
+today <- as.Date(today, format="%Y/%d/%m") 
+
+print(today)
+class(today)
+```
+
+
+```{r}
+cleaned <- copiers[,c(3:6,8:15)]
+cleaned$Product.Name <- as.character(cleaned$Product.Name)
+cleaned$Product.ID <- as.character(cleaned$Product.ID)
+cleaned$Customer.ID <- as.character(cleaned$Customer.ID)
+cleaned$Order.Date <- as.Date(cleaned$Order.Date, format="%m/%d/%y")
+cleaned$Ship.Date <- as.Date(cleaned$Ship.Date, format="%m/%d/%y")
+str(cleaned)
+```
+
+```{r}
+cond1 <- cleaned$Order.Date > as.Date("2016-12-31")
+cond2 <- cleaned$Order.Date < as.Date("2017-07-01")
+
+sum(cleaned[cond1 & cond2, "Profit"])
+```
+
+What is the profit breakdown between customer segments for all sales on weekends?
+```{r}
+cleaned$Order.DOW <- weekdays(cleaned$Order.Date)
+cleaned$Order.Month <- months(cleaned$Order.Date)
+head(cleaned)
+```
+
+```{r}
+table(cleaned$Order.Month, cleaned$Order.DOW)
+```
+
+
+
+
+```{r}
+str(copiers)
+```
+
+
+
+
+
+
+
+
+
+
 It pays to get yourself familiar with R and RStudio, the IDE (interactive development environment). In our workshop, we'll discuss in more details the various functionalities of RStudio's interface, and if this is the first time you're working in a code environment, it pays to get yourself familiar with this IDE as you'll be working with it a lot!
 
 To get started, let's write our first R code by typing `getwd()` into the Console (bottom of the screen), or by running in from within a Chunk (look for the green "run" button):
