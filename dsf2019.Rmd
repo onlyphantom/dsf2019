@@ -224,16 +224,201 @@ print(today)
 class(today)
 ```
 
-
 ```{r}
-cleaned <- copiers[,c(3:6,8:15)]
+copiers <- read.csv("data_input/copiers.csv")
+cleaned <- copiers[,3:15]
 cleaned$Product.Name <- as.character(cleaned$Product.Name)
 cleaned$Product.ID <- as.character(cleaned$Product.ID)
 cleaned$Customer.ID <- as.character(cleaned$Customer.ID)
 cleaned$Order.Date <- as.Date(cleaned$Order.Date, format="%m/%d/%y")
 cleaned$Ship.Date <- as.Date(cleaned$Ship.Date, format="%m/%d/%y")
+cleaned$DOW <- weekdays(cleaned$Order.Date)
 str(cleaned)
 ```
+
+```{r}
+write.csv(cleaned, "processed.csv")
+```
+
+1. What is the average (mean) Sales from Corporate customers?
+```{r}
+corporate <- cleaned[cleaned$Segment == 'Corporate', ]
+mean(corporate$Sales)
+```
+
+2. What is the average (mean) Profit from transactions on First Class shipment?
+```{r}
+mean(cleaned[cleaned$Ship.Mode == "First Class", "Profit"])
+```
+
+3. What percentage of our shipment to Corporate segment is on First Class?
+```{r}
+corporate <- cleaned[cleaned$Segment == 'Corporate',] 
+round(prop.table(table(corporate$Ship.Mode)) * 100, 2)
+```
+Answer: 21.05%
+
+```{r}
+corporate <- cleaned[cleaned$Segment == 'Corporate',] 
+nrow(corporate[corporate$Ship.Mode == "First Class", ])/nrow(corporate) * 100
+```
+
+4. How many transactions are not shipped on Same Day?
+```{r}
+nrow(cleaned[ cleaned$Ship.Mode != 'Same Day', ])
+```
+
+Resume at: 2.55pm
+
+5. Among all high valued transactions (profit > 1000), which segment is most represented?
+```{r}
+table(cleaned[cleaned$Profit > 1000,"Segment"])
+```
+
+6. Working with dates
+  - 6.1 What day of week brings us the most amount of sales in total? Answer: 21769.526
+  - 6.2 What day of week brings us the most amount of sales on average?
+  - 6.3 What day of week brings us the most amount of sales in volume of transactions? Answer: 17 transactions on Friday in total
+
+7. Which Shipment Mode carries the highest profit in total / overall profit?
+7.2 Which Shipment Mode on average carries the highest profit?
+
+```{r}
+output <- aggregate(Profit ~ Ship.Mode + Segment, data=cleaned, FUN=mean)
+head(output, 7)
+```
+
+```{r}
+output[order(output$Profit, decreasing = TRUE), ]
+```
+
+Linear Regression
+-> Predict a numeric outcome
+-> Assumption of linearity
+
+
+```{r}
+plot(x=cleaned$Sales, y=cleaned$Profit)
+```
+
+```{r}
+model1 <- lm(formula=Profit ~ Sales, data=cleaned)
+coef(model1) # coefficients
+```
+Col: Color
+Lwd: Line width
+
+
+```{r}
+newstock <- data.frame(Sales=c(3000, 2600, 1900, 3200))
+predict(model1, newstock, interval = "confidence")
+```
+
+```{r}
+plot(x=cleaned$Sales, y=cleaned$Profit)
+abline(coef(model1)[1], coef(model1)[2], col="dodgerblue4", lwd=2)
+```
+
+```{r}
+cleaned$DOW <- weekdays(cleaned$Order.Date)
+table(cleaned$DOW)
+```
+
+Build a linear model to predict horsepower (hp) using miles per gallon (mpg).
+
+Then use predict(your_model, data.frame(mpg=20)), what is your result?
+
+
+```{r}
+fuelmodel <- lm(hp ~ mpg + wt, mtcars)
+coef(fuelmodel)
+```
+
+hp = 349.287349 + -9.416845 * mpg + -4.168012  * wt
+
+```{r}
+predict(fuelmodel, data.frame(mpg=20, wt=3.4))
+```
+
+Two dimensions:
+When you want to visualize x (numeric) and y (numeric)
+  - scatterplot
+When you want to visualize x (categorical) and y (numeric)
+  - boxplot
+  
+One dimension:
+To visualize distribution, use histogram
+  - `hist(mtcars$mpg, breaks = 30, freq = FALSE)`
+  - `boxplot(cleaned$profit)`
+
+
+```{r}
+hist(mtcars$mpg, 
+     breaks = 30, 
+     freq = FALSE, 
+     col="hotpink", main="Miles per Gallon")
+
+abline(v=20, lwd=2, col="dodgerblue4")
+```
+
+
+```{r}
+plot(cleaned$Sales, 
+     cleaned$Profit,
+     col="goldenrod4", 
+     pch=19,
+     cex=0.6,
+     xlab="Sales", 
+     ylab="Profit (IDR)", 
+     main="Profit Graph"
+     )
+```
+
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+
+ggplot(data=cleaned, aes(x=Sales, y=Profit))+
+  geom_point() +
+  geom_line(col="hotpink") + 
+  geom_smooth(method='loess') +
+  facet_wrap(~Segment) +
+  labs(
+    x='Sales (IDR)', 
+    y='Estimated Profit (IDR)',
+    title = 'Profit Analysis by Segment',
+    subtitle = '2017-2019 Profit Analysis',
+    caption = 'Business Intelligence Division, 2019'
+  ) +
+  theme_economist()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 cond1 <- cleaned$Order.Date > as.Date("2016-12-31")
@@ -253,12 +438,12 @@ head(cleaned)
 table(cleaned$Order.Month, cleaned$Order.DOW)
 ```
 
-
-
-
 ```{r}
 str(copiers)
 ```
+
+
+
 
 
 

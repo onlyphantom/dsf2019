@@ -6,6 +6,7 @@
     - Can be a relative path: `read.csv("data_input/sales_2019_q4.csv")`
     - Can be an absolute path: `read.csv("C:\\Program... \sales.csv")`
     - Can be somewhere online (http, needs internet connection): `read.csv("https://.../data/.csv")`
+        - `write.csv(x, "my_file_name.csv")`
 - Common additional parameters
     - `header=TRUE`
     - `sep=","`
@@ -22,6 +23,7 @@
     - `str()`: structure of the data
         - Shows you the row (observations), columns (variables) of data
         - Shows you first few values of each columns
+    - `nrow()` and `ncol()`, `dim()`
 
 3. Dive into the data (get a sense)
     - One dimensional: `table(oilexport$OPEC)`
@@ -49,3 +51,57 @@
         - Example: `loans[ loans$Duration > 48, ]`
         - Example: `loans$Duration`
         - Example: `loans[  cond1 & cond2, ]`
+    - Knit your report into a HTML using markdown
+    - `aggregate(formula, data, FUN=mean)`
+        - formula: `debt ~ occupation`
+        - formula: `debt ~ occupation + nationality`
+
+6. Regression Models
+    - `cor(sqm, price)`
+        - outputs an absolute value between 0 (no correlation) and 1 (high correlation)
+    - Another way is to plot (`plot(sqm, price)`)
+    - Step 1: Create your model
+        - `lm(price ~ sqm, data=kemang)`
+    - Step 2: Check your coefficients
+        - Two values (beta0) and (beta1)
+        - y = mx+c
+        - y_hat = beta0 + beta1 * x1
+        - `coef(model1)`
+    - Step 3: Optionally plot the coefficients
+    - Step 3b: Use `predict(model1, x)`
+
+7. Visualization
+    - One dimensional
+        - `boxplot()`, `hist()`
+    - Two dimensional
+        - Numeric vs Numeric: scatterplot
+        - Categorical vs Numeric: boxplot
+    - Example:
+    ```r
+    plot(cleaned$Sales, 
+         cleaned$Profit,
+         col="goldenrod4", 
+         pch=19,
+         cex=0.6,
+         xlab="Sales", 
+         ylab="Profit (IDR)", 
+         main="Profit Graph"
+         )
+    ```
+    - ggplot
+    ```
+    ggplot(data=loan, aes(x=purpose, y=amount)) + __
+    ```
+
+    - Pick from:
+        - geom_line
+        - geom_point
+        - geom_smooth
+        - geom_boxplot
+        - ...
+
+
+
+
+
+
